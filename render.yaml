@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: voting-system-backend
+    env: python
+    plan: starter
+    region: oregon
+    pythonVersion: "3.12"
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URI
+        value: ""
+      - key: JWT_SECRET
+        value: ""
+      - key: CORS_ALLOWED_ORIGINS
+        value: "*"
+      - key: FLASK_ENV
+        value: "production"
