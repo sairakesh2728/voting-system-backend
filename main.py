@@ -26,7 +26,7 @@ from models import (
 )
 
 # Compatibility fix
-bcrypt.__about__ = type('about', (object,), {'__version__': bcrypt.__version__})
+# bcrypt.__about__ = type('about', (object,), {'__version__': bcrypt.__version__})
 load_dotenv()
 
 # Config
@@ -42,7 +42,7 @@ mail_conf = ConnectionConfig(
     MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp-relay.brevo.com"),
     MAIL_STARTTLS = True,
     MAIL_SSL_TLS = False,
-    USE_CREDENTIALS = True,
+    USE_CREDENTIALS = True if os.getenv("MAIL_USERNAME") else False,
     VALIDATE_CERTS = True
 )
 
@@ -121,7 +121,7 @@ async def send_otp(request: OtpRequest):
             subject="Voting System OTP",
             recipients=[request.email],
             body=f"Your verification code is: {otp}. It will expire in 10 minutes.",
-            subtype=MessageType.plain
+            subtype="plain"
         )
         await fm.send_message(message)
         print(f"[SUCCESS] OTP sent to {request.email}")

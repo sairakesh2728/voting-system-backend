@@ -88,16 +88,12 @@ class Participant(Document):
 # OTP Record DB Model (Beanie Document)
 # ---------------------------------------------------------
 class OTPRecord(Document):
-    email: Indexed(str)
+    email: str
     otp: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Settings:
         name = "otps"
-        indexes = [
-            # Expire OTP after 10 minutes (600 seconds)
-            [("created_at", 1), {"expireAfterSeconds": 600}]
-        ]
 
 
 # =========================================================
@@ -125,8 +121,6 @@ class UserResponse(BaseModel):
     @field_validator("id", mode="before")
     @classmethod
     def serialize_id(cls, v):
-        if isinstance(v, PydanticObjectId) or isinstance(v, ObjectId) if 'ObjectId' in globals() else False:
-            return str(v)
         return str(v)
 
 class Token(BaseModel):
