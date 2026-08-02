@@ -84,11 +84,31 @@ class Participant(Document):
     )
 
 
+# ---------------------------------------------------------
+# OTP Record DB Model (Beanie Document)
+# ---------------------------------------------------------
+class OTPRecord(Document):
+    email: Indexed(str)
+    otp: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Settings:
+        name = "otps"
+        indexes = [
+            # Expire OTP after 10 minutes (600 seconds)
+            [("created_at", 1), {"expireAfterSeconds": 600}]
+        ]
+
+
 # =========================================================
 # Pydantic Schemas for Requests and Responses (FastAPI)
 # =========================================================
 
 # --- Auth Schemas ---
+class OtpVerifyRequest(BaseModel):
+    email: str
+    otp: str
+
 class UserSignUp(BaseModel):
     name: str = Field(..., min_length=2, max_length=50)
     email: EmailStr

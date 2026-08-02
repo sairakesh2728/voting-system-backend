@@ -9,7 +9,7 @@ if not hasattr(AsyncIOMotorClient, "append_metadata"):
     AsyncIOMotorClient.append_metadata = lambda *args, **kwargs: None
 
 # Import models to register in Beanie
-from models import User, Election, Participant
+from models import User, Election, Participant, OTPRecord
 
 # Load environment variables
 load_dotenv()
@@ -18,7 +18,7 @@ load_dotenv()
 MONGO_URI = os.getenv(
     "MONGO_URI",
     "mongodb+srv://sairakesh2728_db_user:epHgT0QFMxFk4y4B@votingcluster.vafqjiy.mongodb.net/?appName=Votingcluster"
-)
+).strip('"').strip("'")
 
 # Extract database name from connection string if present, otherwise default to voting_system
 try:
@@ -45,7 +45,7 @@ async def init_db():
     # Initialize Beanie ODM
     await init_beanie(
         database=db,
-        document_models=[User, Election, Participant]
+        document_models=[User, Election, Participant, OTPRecord]
     )
     print("[SUCCESS] MongoDB & Beanie ODM initialized successfully!")
 
